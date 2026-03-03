@@ -1,12 +1,430 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8" >
-    <meta name="viewport" content="width=device-width, intitial-scale=1.0"  >
-    <title>A Simple HTML Index Page </title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLEEP - Resolution Note Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6a5acd;
+            --primary-light: #8a7ef0;
+            --secondary: #f3f0ff;
+            --accent: #4caf50;
+            --warning: #e53935;
+            --background: #f8f9fc;
+            --text: #333;
+            --card: #ffffff;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--background);
+            margin: 0;
+            padding-bottom: 120px;
+            color: var(--text);
+        }
+
+        h1 {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            text-align: center;
+            padding: 25px 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 2em;
+            margin: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .section {
+            background: var(--card);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 25px;
+        }
+
+        h2 {
+            font-family: 'Poppins', sans-serif;
+            font-size: 1.3em;
+            color: var(--primary);
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 6px;
+            margin-bottom: 15px;
+        }
+
+        h3 {
+            color: var(--primary);
+            font-size: 1.1em;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #d1d1d1;
+            font-size: 1em;
+            font-family: 'Inter', sans-serif;
+        }
+
+        textarea {
+            resize: vertical;
+        }
+
+        .complaint-block {
+            background: var(--secondary);
+            border-left: 5px solid var(--primary);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 10px;
+        }
+
+        .buttons {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            margin: 5px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: var(--primary-light);
+            }
+
+        .copy-btn {
+            background: var(--accent);
+        }
+
+            .copy-btn:hover {
+                background: #3e8e41;
+            }
+
+        .output {
+            background: #f9fff9;
+            border-left: 5px solid var(--accent);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            line-height: 1.6em;
+            color: #2e4e2e;
+            text-align: justify;
+            white-space: pre-wrap;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* ✅ Floating red disclaimer */
+        .disclaimer {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            font-size: 1.3em;
+            color: #e53935;
+            background: #fff3f3;
+            border-top: 4px solid #e53935;
+            padding: 22px 35px;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 -3px 15px rgba(0,0,0,0.1);
+            font-weight: 700;
+            max-width: 850px;
+            width: 90%;
+            z-index: 1000;
+        }
+
+            .disclaimer strong {
+                font-weight: 800;
+            }
+    </style>
 </head>
 <body>
-    <h1>testing</h1>
-    <h2>test2</h2>
+    <h1>Resolution Note Generator Version 1.2 </h1>
+    <div class="container">
+        <div class="section">
+            <h2>Device & Warranty Info</h2>
+
+            <label>Adverse event or potential risk of injury?</label>
+            <select id="adverseEvent" onchange="toggleAdverseWarning()">
+                <option value=""></option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <div id="adverseWarning" class="hidden" style="background:#fdecea;color:#e53935;border-left:8px solid #e53935;padding:15px 25px;border-radius:10px;margin-top:15px;font-weight:700;font-size:1.1em;">
+                ⚠️ Do not proceed with the service. Contact Resmed immediately to report this event.
+            </div>
+
+            <label>Under warranty?</label>
+            <select id="warranty" onchange="toggleWarrantyOptions()">
+                <option value=""></option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+
+            <label>Complaint reported?</label>
+            <select id="complaintExist" onchange="toggleComplaintSections()">
+                <option value=""></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
+
+            <div id="twoComplaintsSection">
+                <label>Two complaints?</label>
+                <select id="twoComplaints" onchange="toggleSecondComplaint()">
+                    <option value=""></option>
+                    <option value="no">No</option>
+                    <option value="yes">Yes</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section" id="complaintDetailsSection">
+            <h2>Complaint Details</h2>
+            <div id="complaintSection1" class="complaint-block">
+                <label id="complaint1Label">Complaint</label>
+                <textarea id="customerComplaint1" placeholder="Describe the customer's complaint..."></textarea>
+                <label>Confirmed?</label>
+                <select id="confirmed1">
+                    <option value=""></option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+
+            <div id="complaintSection2" class="complaint-block hidden">
+                <label id="complaint2Label">Complaint #2</label>
+                <textarea id="customerComplaint2" placeholder="Describe the customer's second complaint..."></textarea>
+                <label>Confirmed?</label>
+                <select id="confirmed2">
+                    <option value=""></option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Evaluation Summary</h2>
+
+            <h3>Software Inspection</h3>
+            <textarea id="findings" placeholder="Describe findings from software inspection..."></textarea>
+
+            <h3>External Inspection</h3>
+            <textarea id="externalFindings" placeholder="Describe findings from external inspection..."></textarea>
+
+            <h3>Internal Inspection</h3>
+            <textarea id="internalFindings" placeholder="Describe findings from internal inspection..."></textarea>
+
+            <div id="warrantyVoidSection" class="hidden" style="margin-top:10px;">
+                <label>Warranty void reason (if applicable)</label>
+                <select id="warrantyVoidReason">
+                    <option value=""></option>
+                    <option value="liquid ingress">Liquid Ingress</option>
+                    <option value="water damage">Water Damage</option>
+                    <option value="ozone damage or contamination">Ozone Damage/Contamination</option>
+                    <option value="physical damage">Physical Damage</option>
+                    <option value="tobacco contamination">Tobacco Contamination</option>
+                    <option value="improper use">Improper Use</option>
+                    <option value="unauthorized modification or alteration of product">Unauthorized Modification/Alteration of Product</option>
+                    <option value="dust or debris contamination">Dust/Debris Contamination</option>
+                    <option value="misuse or improper handling">Misuse or Improper Handling</option>
+                </select>
+            </div>
+
+            <label>Required Components for Repair (optional)</label>
+            <textarea id="requiredParts"></textarea>
+
+            <label>Accessories Received (optional)</label>
+            <textarea id="accessories"></textarea>
+
+            <label>Is the unit infested?</label>
+            <select id="infested">
+                <option value=""></option>
+                <option value="no">No</option>
+                <option value="yes">Yes</option>
+            </select>
+        </div>
+
+        <div class="buttons">
+            <button onclick="generateNotes()">✨ Generate Notes</button>
+            <button onclick="clearData()">🧹 Clear All</button>
+        </div>
+
+        <div class="section">
+            <h2>Evaluation Note</h2>
+            <div id="evaluationNote" class="output"></div>
+            <button class="copy-btn" onclick="copyToClipboard('evaluationNote')">📋 Copy Evaluation Note</button>
+        </div>
+
+        <div class="section">
+            <h2>Repair Resolution Note</h2>
+            <label>Repair Status</label>
+            <select id="repairStatus" onchange="generateNotes()">
+                <option value=""></option>
+                <option value="approved">Approved</option>
+                <option value="declined">Declined</option>
+                <option value="replaced">Device Replaced</option>
+            </select>
+            <div id="repairNote" class="output"></div>
+            <button class="copy-btn" onclick="copyToClipboard('repairNote')">📋 Copy Repair Note</button>
+        </div>
+    </div>
+
+    <!-- ✅ Floating Disclaimer -->
+    <div class="disclaimer">
+        ⚠️ <strong>Important:</strong> Review and make proper edits as needed before finalizing your notes.
+    </div>
+
+    <script>
+function toggleAdverseWarning() {
+  const adverse = document.getElementById("adverseEvent").value;
+  document.getElementById("adverseWarning").classList.toggle("hidden", adverse !== "yes");
+}
+
+function toggleWarrantyOptions() {
+  const warranty = document.getElementById("warranty").value;
+  document.getElementById("warrantyVoidSection").classList.toggle("hidden", warranty !== "yes");
+}
+
+function toggleComplaintSections() {
+  const complaintExist = document.getElementById("complaintExist").value;
+  document.getElementById("twoComplaintsSection").classList.toggle("hidden", complaintExist !== "yes");
+  document.getElementById("complaintDetailsSection").classList.toggle("hidden", complaintExist !== "yes");
+}
+
+function toggleSecondComplaint() {
+  const showSecond = document.getElementById("twoComplaints").value === "yes";
+  document.getElementById("complaintSection2").classList.toggle("hidden", !showSecond);
+  document.getElementById("complaint1Label").innerText = showSecond ? "Complaint #1" : "Complaint";
+}
+
+function generateNotes() {
+  const complaintExist = document.getElementById("complaintExist").value;
+  const twoComplaints = document.getElementById("twoComplaints").value;
+  const c1 = document.getElementById("customerComplaint1").value.trim();
+  const c2 = document.getElementById("customerComplaint2").value.trim();
+  const confirmed1 = document.getElementById("confirmed1").value;
+  const confirmed2 = document.getElementById("confirmed2").value;
+  const findings = document.getElementById("findings").value.trim();
+  const externalFindings = document.getElementById("externalFindings").value.trim();
+  const internalFindings = document.getElementById("internalFindings").value.trim();
+  const requiredParts = document.getElementById("requiredParts").value.trim();
+  const accessories = document.getElementById("accessories").value.trim();
+  const infested = document.getElementById("infested").value;
+  const warranty = document.getElementById("warranty").value;
+  const warrantyVoidReason = document.getElementById("warrantyVoidReason").value;
+  const repairStatus = document.getElementById("repairStatus").value;
+  const adverse = document.getElementById("adverseEvent").value;
+
+  let evaluationNote = "";
+  let repairNote = "";
+
+  if (infested === "yes") {
+    evaluationNote = "Inspection revealed insect infestation. Due to the extent of the infestation, the reported issue could not be verified. The unit is beyond repair and is not suitable for patient use.";
+    repairNote = "The device was returned unrepaired due to infestation.";
+  } else {
+    if (complaintExist === "yes") {
+      let complaintText = "";
+
+      if (twoComplaints === "yes" && c1 && c2) {
+        const confText1 = confirmed1 === "yes" ? "\nComplaint was confirmed" : "\nComplaint cannot be confirmed";
+        const confText2 = confirmed2 === "yes" ? "\nComplaint was confirmed" : "\nComplaint cannot be confirmed";
+        complaintText = `Reported complaint:
+${c1} ${confText1}.
+Reported complaint:
+${c2} ${confText2}.`;
+      } else if (c1) {
+        const confText1 = confirmed1 === "yes" ? "\nComplaint was confirmed" : "\nComplaint cannot be confirmed";
+        complaintText = `Reported complaint:
+${c1}, ${confText1}.`;
+      }
+
+      evaluationNote = `The unit was received and evaluated following a customer complaint.
+
+${complaintText}
+
+Software inspection revealed: ${findings || "no additional software issues found"}.
+External inspection revealed: ${externalFindings || "no external issues found"}.
+Internal inspection revealed: ${internalFindings || "no internal issues found"}.
+`;
+    } else {
+      evaluationNote = `The unit was received with no reported complaints and underwent a thorough inspection.
+
+Software inspection revealed: ${findings || "no software faults found"}.
+External inspection revealed: ${externalFindings || "no external issues found"}.
+Internal inspection revealed: ${internalFindings || "no internal issues found"}.
+`;
+    }
+
+    if (accessories) evaluationNote += `\nAccessories received with the device: ${accessories}.`;
+
+    if (warranty === "yes" && warrantyVoidReason) {
+      evaluationNote += `\n\nSince Resmed's limited warranty does not cover damage caused by ${warrantyVoidReason}, the unit is not eligible for warranty coverage.`;
+    } else if (requiredParts) {
+      evaluationNote += `\n\nTo restore proper functionality, the following components need replacement: ${requiredParts}.`;
+    }
+
+    if (adverse === "yes") evaluationNote += "\n\n⚠️ Adverse event reported; Resmed has been notified.";
+
+    if (repairStatus === "declined") {
+      repairNote = "The customer declined the repair; the device is being returned unrepaired.";
+    } else if (repairStatus === "replaced") {
+      repairNote = "The device was replaced under warranty as per Resmed policy.";
+    } else if (repairStatus === "approved") {
+      repairNote = "The unit was repaired with the necessary components, tested, and passed all performance checks before being returned to the customer.";
+    }
+  }
+
+  document.getElementById("evaluationNote").innerText = evaluationNote.trim();
+  document.getElementById("repairNote").innerText = repairNote.trim();
+}
+
+window.onload = function() {
+  document.getElementById("repairStatus").value = "approved";
+  document.getElementById("repairNote").innerText =
+    "The unit was repaired with the necessary components, tested, and passed all performance checks before being returned to the customer.";
+};
+
+function copyToClipboard(id) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text);
+  alert("Copied to clipboard!");
+}
+
+function clearData() {
+  document.querySelectorAll("input, textarea, select").forEach(el => el.value = "");
+  document.getElementById("evaluationNote").innerText = "";
+  document.getElementById("repairNote").innerText = "";
+  document.getElementById("complaintSection2").classList.add("hidden");
+  document.getElementById("complaint1Label").innerText = "Complaint";
+  document.getElementById("warrantyVoidSection").classList.add("hidden");
+}
+    </script>
 </body>
 </html>
