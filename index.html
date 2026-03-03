@@ -140,6 +140,9 @@
 
         /* ✅ Floating red disclaimer */
         .disclaimer {
+            display: flex;
+            flex-direction: column-reverse;
+            overflow: auto;
             position: fixed;
             bottom: 0;
             left: 50%;
@@ -220,12 +223,7 @@
             <div id="complaintSection2" class="complaint-block hidden">
                 <label id="complaint2Label">Complaint #2</label>
                 <textarea id="customerComplaint2" placeholder="Describe the customer's second complaint..."></textarea>
-                <label>Confirmed?</label>
-                <select id="confirmed2">
-                    <option value=""></option>
-                    <option value="yes">Yes</option>
-                    <option value="no">No</option>
-                </select>
+                
             </div>
         </div>
 
@@ -256,6 +254,13 @@
                     <option value="misuse or improper handling">Misuse or Improper Handling</option>
                 </select>
             </div>
+
+            <label>Reproduced?</label>
+            <select id="confirmed2">
+                <option value=""></option>
+                <option value="yes">Yes</option>
+                <option value="no">No</option>
+            </select>
 
             <label>Required Components for Repair (optional)</label>
             <textarea id="requiredParts"></textarea>
@@ -297,6 +302,7 @@
     </div>
 
     <!-- ✅ Floating Disclaimer -->
+    
     <div class="disclaimer">
         ⚠️ <strong>Important:</strong> Review and make proper edits as needed before finalizing your notes.
     </div>
@@ -348,7 +354,8 @@ function generateNotes() {
   if (infested === "yes") {
     evaluationNote = "Inspection revealed insect infestation. Due to the extent of the infestation, the reported issue could not be verified. The unit is beyond repair and is not suitable for patient use.";
     repairNote = "The device was returned unrepaired due to infestation.";
-  } else {
+  }
+  else {
     if (complaintExist === "yes") {
       let complaintText = "";
 
@@ -359,7 +366,9 @@ function generateNotes() {
 ${c1} ${confText1}.
 Reported complaint:
 ${c2} ${confText2}.`;
-      } else if (c1) {
+      }
+
+      else if (c1) {
         const confText1 = confirmed1 === "yes" ? "\nComplaint was confirmed" : "\nComplaint cannot be confirmed";
         complaintText = `Reported complaint:
 ${c1}, ${confText1}.`;
@@ -369,14 +378,16 @@ ${c1}, ${confText1}.`;
 
 ${complaintText}
 
-Software inspection revealed: ${findings || "no additional software issues found"}.
+Software inspection revealed: ${findings || "passed all software testing"}.
 External inspection revealed: ${externalFindings || "no external issues found"}.
 Internal inspection revealed: ${internalFindings || "no internal issues found"}.
 `;
-    } else {
+    }
+
+    else {
       evaluationNote = `The unit was received with no reported complaints and underwent a thorough inspection.
 
-Software inspection revealed: ${findings || "no software faults found"}.
+Software inspection revealed: ${findings || "passed all software testing"}.
 External inspection revealed: ${externalFindings || "no external issues found"}.
 Internal inspection revealed: ${internalFindings || "no internal issues found"}.
 `;
@@ -386,7 +397,9 @@ Internal inspection revealed: ${internalFindings || "no internal issues found"}.
 
     if (warranty === "yes" && warrantyVoidReason) {
       evaluationNote += `\n\nSince Resmed's limited warranty does not cover damage caused by ${warrantyVoidReason}, the unit is not eligible for warranty coverage.`;
-    } else if (requiredParts) {
+    }
+
+    else if (requiredParts) {
       evaluationNote += `\n\nTo restore proper functionality, the following components need replacement: ${requiredParts}.`;
     }
 
@@ -394,9 +407,13 @@ Internal inspection revealed: ${internalFindings || "no internal issues found"}.
 
     if (repairStatus === "declined") {
       repairNote = "The customer declined the repair; the device is being returned unrepaired.";
-    } else if (repairStatus === "replaced") {
+    }
+
+    else if (repairStatus === "replaced") {
       repairNote = "The device was replaced under warranty as per Resmed policy.";
-    } else if (repairStatus === "approved") {
+    }
+
+    else if (repairStatus === "approved") {
       repairNote = "The unit was repaired with the necessary components, tested, and passed all performance checks before being returned to the customer.";
     }
   }
